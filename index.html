@@ -138,6 +138,26 @@
         <div class="scroll inset"><div class="grid" id="me-posts"><p class="muted center">Memuat…</p></div></div>
       </div>
     </div>
+
+    <div id="admin-area" hidden>
+      <div class="card">
+        <div class="me-head">
+          <div>
+            <h2>Dashboard Admin</h2>
+            <p class="muted">Kelola pendaftaran anggota ekstrakurikuler musik.</p>
+          </div>
+          <button type="button" class="btn" id="btn-admin-logout">Keluar</button>
+        </div>
+        <div class="note" id="admin-msg" role="status"></div>
+        <div class="scroll inset" style="margin-top:1rem">
+          <table>
+            <thead><tr><th>Nama</th><th>Username</th><th>Kelas</th><th>Divisi</th><th>Status</th><th>Aksi</th></tr></thead>
+            <tbody id="admin-anggota-body"><tr><td colspan="6" class="center">Memuat data…</td></tr></tbody>
+          </table>
+        </div>
+        <button type="button" class="btn" id="btn-admin-refresh" style="margin-top:1rem">Muat ulang</button>
+      </div>
+    </div>
   </section>
 
   <footer class="card footer">

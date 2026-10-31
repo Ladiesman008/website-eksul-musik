@@ -94,7 +94,11 @@ function tick() { const n = new Date(); $('#time').textContent = tf.format(n).re
 function switchTab(id) {
   $$('.pane').forEach(p => p.classList.toggle('active', p.id === id));
   $$('[data-tab]').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
-  if (id === 'akun') { renderAuth(); if (sesi) loadMe(); }
+  if (id === 'akun') {
+    renderAuth();
+    if (sesi?.role === 'admin') loadAdmin();
+    else if (sesi) loadMe();
+  }
   else if (id === 'feed') loadFeed();
   else loadAnggota();
 }
@@ -102,9 +106,11 @@ function switchTab(id) {
 // ---------- Login / profil ----------
 function renderAuth() {
   const masuk = !!sesi;
+  const admin = masuk && sesi.role === 'admin';
   $('#auth-card').hidden = masuk;
-  $('#profil-area').hidden = !masuk;
-  $('#tab-akun').textContent = masuk ? 'Profil' : 'Masuk';
+  $('#profil-area').hidden = !masuk || admin;
+  $('#admin-area').hidden = !admin;
+  $('#tab-akun').textContent = admin ? 'Admin' : masuk ? 'Profil' : 'Masuk';
 }
 function sesiHabis() {
   simpanSesi(null); renderAuth(); switchTab('akun');
@@ -134,6 +140,70 @@ async function loadMe() {
       : '<p class="muted center" style="grid-column:1/-1">Belum ada dokumentasi. Bagikan kegiatan pertamamu!</p>';
   } catch (e) { $('#me-posts').innerHTML = `<p class="muted center">${esc(errText(e))}</p>`; }
 }
+
+// ---------- Dashboard admin ----------
+async function loadAdmin() {
+  const body = $('#admin-anggota-body');
+  body.innerHTML = row('Memuat data…', 6);
+  try {
+    const r = await api('admin_list_anggota');
+    if (r.expired) return sesiHabis();
+    if (r.result !== 'success') {
+      body.innerHTML = row(r.message || 'Gagal memuat data anggota.', 6);
+      return;
+    }
+    const list = r.data || r.anggota || [];
+    if (!list.length) {
+      body.innerHTML = row('Belum ada pendaftaran anggota.', 6);
+      return;
+    }
+    body.innerHTML = list.map(a => {
+      const nama = a.nama || a.nama_lengkap || '-';
+      const username = a.username || '';
+      const kelas = a.kelas || '-';
+      const divisi = a.divisi || '-';
+      const status = a.status || a.status_verifikasi || a.statusVerifikasi || 'Menunggu Verifikasi';
+      const safeUser = esc(username);
+      const rowNumber = Number(a.row);
+      return `<tr>
+        <td>${esc(nama)}</td><td>${safeUser}</td><td>${esc(kelas)}</td>
+        <td>${esc(divisi)}</td><td>${esc(status)}</td>
+        <td>
+          <button type="button" class="btn" data-admin-status="Disetujui" data-row="${rowNumber}">Setujui</button>
+          <button type="button" class="btn" data-admin-status="Ditolak" data-row="${rowNumber}">Tolak</button>
+          <button type="button" class="btn" data-admin-delete="${rowNumber}">Hapus</button>
+        </td>
+      </tr>`;
+    }).join('');
+  } catch (e) {
+    body.innerHTML = row(errText(e), 6);
+  }
+}
+
+async function ubahStatusAdmin(row, status) {
+  if (!row) return;
+  const msg = $('#admin-msg');
+  note(msg, 'Memproses perubahan status…');
+  try {
+    const r = await api('admin_verifikasi', { row, status });
+    if (r.expired) return sesiHabis();
+    note(msg, r.message || (r.result === 'success' ? 'Status berhasil diperbarui.' : 'Gagal memperbarui status.'), r.result === 'success' ? 'ok' : 'err');
+    if (r.result === 'success') await loadAdmin();
+  } catch (e) { note(msg, errText(e), 'err'); }
+}
+
+async function hapusAnggotaAdmin(row) {
+  if (!row || !confirm('Hapus data anggota ini?')) return;
+  const msg = $('#admin-msg');
+  note(msg, 'Menghapus anggota…');
+  try {
+    const r = await api('admin_hapus_anggota', { row });
+    if (r.expired) return sesiHabis();
+    note(msg, r.message || (r.result === 'success' ? 'Anggota berhasil dihapus.' : 'Gagal menghapus anggota.'), r.result === 'success' ? 'ok' : 'err');
+    if (r.result === 'success') await loadAdmin();
+  } catch (e) { note(msg, errText(e), 'err'); }
+}
+
 
 // ---------- Kegiatan (reels) ----------
 async function loadFeed() {
@@ -263,11 +333,25 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#to-akun').addEventListener('click', openReg);
   $('#btn-logout').addEventListener('click', keluar);
 
+  // Tombol khusus dashboard admin.
+  $('#btn-admin-logout').addEventListener('click', keluar);
+  $('#btn-admin-refresh').addEventListener('click', loadAdmin);
+  $('#admin-anggota-body').addEventListener('click', e => {
+    const statusBtn = e.target.closest('[data-admin-status]');
+    if (statusBtn) {
+      ubahStatusAdmin(Number(statusBtn.dataset.row), statusBtn.dataset.adminStatus);
+      return;
+    }
+
+    const deleteBtn = e.target.closest('[data-admin-delete]');
+    if (deleteBtn) hapusAnggotaAdmin(Number(deleteBtn.dataset.adminDelete));
+  });
+
   $('#login-form').addEventListener('submit', e => {
     e.preventDefault();
     kirim(e.target, $('#btn-login'), $('#login-msg'), 'login',
       { username: $('#login-user').value.trim(), password: $('#login-pass').value },
-      r => { simpanSesi({ token: r.token, nama: r.nama, kelas: r.kelas }); note($('#login-msg'), ''); switchTab('akun'); });
+      r => { simpanSesi({ token: r.token, nama: r.nama, kelas: r.kelas, role: r.role || 'anggota' }); note($('#login-msg'), ''); switchTab('akun'); });
   });
 
   // Edit bio
