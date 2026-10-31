@@ -23,7 +23,7 @@ const PROFIL = {
     bio: 'Siswa kelas XI RPL yang baik dan ganteng yang memimpin kegiatan ekskul musik: mengoordinasi jadwal latihan dan menjadi penghubung antara anggota dan pembina.' }
 };
 
-let anggota = [], divAktif = 'modern';
+let anggota = [], divAktif = 'modern', feed = [], fotoPost = null;
 
 // ---------- Sesi login siswa (hilang saat tab/browser ditutup) ----------
 const SESI_KEY = 'ekskul_sesi';
@@ -62,10 +62,29 @@ async function kirim(form, btn, msgEl, action, data, onOk) {
     if (r.expired) { sesiHabis(); return; }
     const ok = r.result === 'success';
     note(msgEl, r.message || (ok ? 'Berhasil.' : 'Gagal.'), ok ? 'ok' : 'err');
-    if (ok) { form.reset(); await onOk?.(r); }
+    if (ok) { form?.reset(); await onOk?.(r); }
   } catch (e) { note(msgEl, errText(e), 'err'); }
   finally { btn.disabled = false; btn.textContent = label; }
 }
+
+// Perkecil foto di browser (cepat diunggah, hemat ruang Drive)
+function resize(file, max, q = .82) {
+  return new Promise((res, rej) => {
+    const img = new Image(), u = URL.createObjectURL(file);
+    img.onload = () => {
+      const s = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(u); res(c.toDataURL('image/jpeg', q));
+    };
+    img.onerror = () => rej(new Error('IMG'));
+    img.src = u;
+  });
+}
+const avatarHTML = (url, nama) => url
+  ? `<img class="av" src="${esc(url)}" alt="" referrerpolicy="no-referrer">`
+  : `<span class="av">${esc((nama || '?')[0])}</span>`;
 
 // ---------- Jam & tab ----------
 const tf = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
@@ -75,39 +94,87 @@ function tick() { const n = new Date(); $('#time').textContent = tf.format(n).re
 function switchTab(id) {
   $$('.pane').forEach(p => p.classList.toggle('active', p.id === id));
   $$('[data-tab]').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
-  if (id === 'absensi') { renderAuth(); if (sesi) loadAbsensi(); }
+  if (id === 'akun') { renderAuth(); if (sesi) loadMe(); }
+  else if (id === 'feed') loadFeed();
   else loadAnggota();
 }
 
-// ---------- Login / daftar akun ----------
+// ---------- Login / profil ----------
 function renderAuth() {
   const masuk = !!sesi;
   $('#auth-card').hidden = masuk;
-  $('#absensi-area').hidden = !masuk;
-  if (masuk) $('#who').textContent = `${sesi.nama} · ${sesi.kelas}`;
+  $('#profil-area').hidden = !masuk;
+  $('#tab-akun').textContent = masuk ? 'Profil' : 'Masuk';
 }
 function sesiHabis() {
-  simpanSesi(null); renderAuth();
+  simpanSesi(null); renderAuth(); switchTab('akun');
   note($('#login-msg'), 'Sesi berakhir. Silakan masuk lagi.', 'err');
 }
 function keluar() {
   api('logout', {}).catch(() => {});
-  simpanSesi(null); renderAuth();
-  note($('#login-msg'), '');
+  simpanSesi(null); renderAuth(); note($('#login-msg'), '');
 }
 
-// ---------- Data ----------
-async function loadAbsensi() {
-  const tb = $('#absensi-body');
+function setAvatar(el, url, nama) {
+  el.innerHTML = ''; el.classList.toggle('noimg', !url); el.dataset.initial = (nama || '?')[0];
+  if (url) { const i = new Image(); i.alt = 'Foto profil'; i.referrerPolicy = 'no-referrer'; i.onerror = () => el.classList.add('noimg'); i.src = url; el.append(i); }
+}
+
+async function loadMe() {
   try {
-    const r = await api('read_absensi');
+    const r = await api('read_profil');
     if (r.expired) return sesiHabis();
-    tb.innerHTML = r.data.length
-      ? r.data.map(x => `<tr><td>${esc(x.waktu)}</td><td><b>${esc(x.nama)}</b></td><td>${esc(x.kelas)}</td><td><span class="tag ${esc(x.status)}">${esc(x.status)}</span></td></tr>`).join('')
-      : row('Belum ada absensi hari ini.', 4);
-  } catch (e) { tb.innerHTML = row(errText(e), 4); }
+    const p = r.profil;
+    $('#me-nama').textContent = p.nama;
+    $('#me-info').textContent = [p.kelas, p.divisi].filter(Boolean).join(' · ');
+    $('#me-bio').value = p.bio || '';
+    setAvatar($('#me-avatar'), p.avatar, p.nama);
+    $('#me-posts').innerHTML = r.posts.length
+      ? r.posts.map(x => `<div class="thumb"><img src="${esc(x.foto)}" alt="${esc(x.caption)}" loading="lazy" referrerpolicy="no-referrer"><b>♥ ${x.likes}</b><button type="button" data-del="${esc(x.id)}" aria-label="Hapus">&times;</button></div>`).join('')
+      : '<p class="muted center" style="grid-column:1/-1">Belum ada dokumentasi. Bagikan kegiatan pertamamu!</p>';
+  } catch (e) { $('#me-posts').innerHTML = `<p class="muted center">${esc(errText(e))}</p>`; }
 }
 
+// ---------- Kegiatan (reels) ----------
+async function loadFeed() {
+  const box = $('#reels');
+  try {
+    const r = await api('read_feed');
+    feed = r.data || [];
+    renderFeed();
+  } catch (e) { box.innerHTML = `<div class="reel-empty">${esc(errText(e))}</div>`; }
+}
+
+function renderFeed() {
+  $('#reels').innerHTML = feed.length ? feed.map(p => `
+    <article class="reel" data-id="${esc(p.id)}">
+      <img src="${esc(p.foto)}" alt="Dokumentasi ${esc(p.nama)}" loading="lazy" referrerpolicy="no-referrer">
+      <div class="shade"></div>
+      <div class="meta">
+        <div class="who2">${avatarHTML(p.avatar, p.nama)}<div><b>${esc(p.nama)}</b><small>${esc(p.divisi)} · ${esc(p.waktu)}</small></div></div>
+        <p class="cap">${esc(p.caption)}</p>
+      </div>
+      <div class="side"><button type="button" class="like ${p.liked ? 'on' : ''}" data-like="${esc(p.id)}" aria-label="Suka" aria-pressed="${p.liked}"><span>♥</span><b>${p.likes}</b></button></div>
+    </article>`).join('')
+    : '<div class="reel-empty">Belum ada kegiatan.<br>Masuk lalu bagikan dokumentasi pertamamu di menu Profil.</div>';
+}
+
+async function toggleLike(id) {
+  if (!sesi) { switchTab('akun'); note($('#login-msg'), 'Masuk dulu untuk menyukai kegiatan.', 'err'); return; }
+  const p = feed.find(x => x.id === id); if (!p) return;
+  const btn = $(`[data-like="${CSS.escape(id)}"]`);
+  p.liked = !p.liked; p.likes += p.liked ? 1 : -1; // tampil langsung, lalu sinkron
+  btn.classList.toggle('on', p.liked); btn.lastElementChild.textContent = p.likes;
+  try {
+    const r = await api('toggle_like', { id });
+    if (r.expired) return sesiHabis();
+    if (r.result === 'success') { p.liked = r.liked; p.likes = r.likes; btn.classList.toggle('on', p.liked); btn.lastElementChild.textContent = p.likes; }
+  } catch {}
+}
+
+function scrollReel(dir) { const r = $('#reels'); r.scrollBy({ top: dir * r.clientHeight, behavior: 'smooth' }); }
+
+// ---------- Data anggota ----------
 async function loadAnggota() {
   try { anggota = (await api('read_anggota')).data; renderAnggota(); }
   catch (e) { $('#anggota-body').innerHTML = row(errText(e), 5); }
@@ -177,7 +244,22 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#modal-profil').addEventListener('click', e => { if (e.target.id === 'modal-profil') closeProfil(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeReg(); closeProfil(); } });
 
-  // Login. "Mendaftar" langsung membuka form Daftar Anggota (username & password dibuat di sana)
+  // Reels: like (klik / dobel-klik foto), tombol naik-turun, keyboard
+  $('#reels').addEventListener('click', e => { const b = e.target.closest('[data-like]'); if (b) toggleLike(b.dataset.like); });
+  $('#reels').addEventListener('dblclick', e => {
+    const r = e.target.closest('.reel'); if (!r || e.target.closest('.meta,.side')) return;
+    const p = feed.find(x => x.id === r.dataset.id);
+    if (sesi && p && !p.liked) toggleLike(p.id);
+    if (sesi) { const h = document.createElement('div'); h.className = 'burst'; h.textContent = '♥'; r.append(h); setTimeout(() => h.remove(), 800); }
+  });
+  $('#reel-up').addEventListener('click', () => scrollReel(-1));
+  $('#reel-down').addEventListener('click', () => scrollReel(1));
+  $('#reels').addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); scrollReel(1); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); scrollReel(-1); }
+  });
+
+  // Login. "Mendaftar" langsung membuka form Daftar Anggota
   $('#to-akun').addEventListener('click', openReg);
   $('#btn-logout').addEventListener('click', keluar);
 
@@ -185,13 +267,52 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     kirim(e.target, $('#btn-login'), $('#login-msg'), 'login',
       { username: $('#login-user').value.trim(), password: $('#login-pass').value },
-      r => { simpanSesi({ token: r.token, nama: r.nama, kelas: r.kelas }); note($('#login-msg'), ''); renderAuth(); loadAbsensi(); });
+      r => { simpanSesi({ token: r.token, nama: r.nama, kelas: r.kelas }); note($('#login-msg'), ''); switchTab('akun'); });
   });
 
-  // Absensi (nama & kelas diambil server dari akun yang login)
-  $('#absensi-form').addEventListener('submit', e => {
+  // Edit bio
+  $('#bio-form').addEventListener('submit', e => {
     e.preventDefault();
-    kirim(e.target, $('#btn-absen'), $('#absen-msg'), 'insert_absensi', { status: e.target.status.value }, loadAbsensi);
+    kirim(null, $('#btn-bio'), $('#bio-msg'), 'update_profil', { bio: $('#me-bio').value });
+  });
+
+  // Ganti foto profil (langsung tersimpan ke Google Drive)
+  $('#me-foto-in').addEventListener('change', async e => {
+    const f = e.target.files[0]; e.target.value = '';
+    if (!f) return;
+    note($('#bio-msg'), 'Mengunggah foto profil…');
+    try {
+      const foto = await resize(f, 500);
+      const r = await api('update_profil', { foto });
+      if (r.expired) return sesiHabis();
+      note($('#bio-msg'), r.message || 'Gagal.', r.result === 'success' ? 'ok' : 'err');
+      if (r.result === 'success') loadMe();
+    } catch (err) { note($('#bio-msg'), err.message === 'IMG' ? 'File bukan gambar yang valid.' : errText(err), 'err'); }
+  });
+
+  // Pilih foto dokumentasi + pratinjau
+  $('#post-foto').addEventListener('change', async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try {
+      fotoPost = await resize(f, 1080);
+      const pv = $('#post-preview'); pv.src = fotoPost; pv.hidden = false; $('#drop-txt').hidden = true;
+    } catch { fotoPost = null; note($('#post-msg'), 'File bukan gambar yang valid.', 'err'); }
+  });
+
+  // Bagikan dokumentasi
+  $('#post-form').addEventListener('submit', e => {
+    e.preventDefault();
+    if (!fotoPost) return note($('#post-msg'), 'Pilih foto kegiatan dulu.', 'err');
+    kirim(e.target, $('#btn-post'), $('#post-msg'), 'insert_post', { foto: fotoPost, caption: $('#post-cap').value }, () => {
+      fotoPost = null; $('#post-preview').hidden = true; $('#drop-txt').hidden = false; loadMe();
+    });
+  });
+
+  // Hapus dokumentasi sendiri
+  $('#me-posts').addEventListener('click', async e => {
+    const b = e.target.closest('[data-del]');
+    if (!b || !confirm('Hapus dokumentasi ini?')) return;
+    try { const r = await api('delete_post', { id: b.dataset.del }); if (r.expired) return sesiHabis(); loadMe(); } catch {}
   });
 
   $('#register-form').addEventListener('submit', e => {
@@ -204,12 +325,14 @@ document.addEventListener('DOMContentLoaded', () => {
       await loadAnggota();
       // Setelah daftar, arahkan ke form login dengan username terisi
       setTimeout(() => {
-        closeReg(); note($('#reg-msg'), ''); switchTab('absensi');
+        closeReg(); note($('#reg-msg'), ''); switchTab('akun');
         $('#login-user').value = user; $('#login-pass').focus();
         note($('#login-msg'), 'Pendaftaran berhasil. Silakan masuk dengan username dan password kamu.', 'ok');
       }, 1500);
     });
   });
 
-  loadAnggota(); // halaman awal = dashboard; absensi baru dimuat setelah login
+  renderAuth();
+  loadFeed();     // halaman awal = kegiatan siswa
+  loadAnggota();  // untuk statistik dashboard
 });
