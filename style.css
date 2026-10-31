@@ -32,11 +32,7 @@ h3{letter-spacing:.02em;text-shadow:var(--carve-lg)}
 /* Header */
 .header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.2rem}
 .brand{display:flex;align-items:center;gap:1.2rem}
-
-.logo{width: 110px;height:175px;object-fit:contain;filter:drop-shadow(4px 6px 6px rgba(70,85,120,.3))}
-
 .logo{width:175px;height:175px;object-fit:contain;filter:drop-shadow(6px 10px 8px rgba(70,85,120,.35))}
-
 .clock{padding:.8rem 1.2rem;text-align:right;display:flex;flex-direction:column}
 .clock b{font-family:var(--display);font-weight:400;font-size:1.7rem;color:var(--ac);font-variant-numeric:tabular-nums;text-shadow:var(--carve-lg)}
 .clock span{font-size:.85rem;color:var(--mu)}
