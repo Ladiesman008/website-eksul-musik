@@ -6,7 +6,7 @@
 <title>Ekstrakurikuler Musik - SMK BPP Bandung</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Hanken+Grotesk:wght@500;600;700&family=Noto+Music&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Noto+Music&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,38 +15,18 @@
   <header class="card header">
     <div class="brand">
       <img id="logo" class="logo" alt="Logo Ekskul Musik">
-      <div><h1>EKTRAKURIKULER MUSIK</h1><p class="accent-text">SMK BPP Bandung</p></div>
+      <div><h1>EKTRAKURIKULER MUSIK 6</h1><p class="accent-text">SMK BPP Bandung</p></div>
     </div>
     <div class="clock inset"><b id="time">--:--:--</b><span id="date">--</span></div>
   </header>
 
   <nav class="card tabs">
-    <button class="btn active" data-tab="feed">Kegiatan</button>
-    <button class="btn" data-tab="dashboard">Dashboard</button>
-    <button class="btn" data-tab="akun" id="tab-akun">Masuk</button>
+    <button class="btn active" data-tab="dashboard">Dashboard</button>
+    <button class="btn" data-tab="absensi">Absensi</button>
     <button class="btn primary" id="open-reg">Daftar Anggota</button>
   </nav>
 
-  <!-- KEGIATAN (halaman pertama): gaya reels -->
-  <section id="feed" class="pane active">
-    <div class="reel-stage">
-      <div class="float-wrap">
-        <div class="float">
-          <div class="glass">
-            <div class="reels" id="reels" tabindex="0" aria-label="Kegiatan anggota ekskul">
-              <div class="reel-empty">Memuat kegiatan…</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="reel-nav">
-        <button class="close" id="reel-up" aria-label="Kegiatan sebelumnya">&#8593;</button>
-        <button class="close" id="reel-down" aria-label="Kegiatan berikutnya">&#8595;</button>
-      </div>
-    </div>
-  </section>
-
-  <section id="dashboard" class="pane">
+  <section id="dashboard" class="pane active">
     <div class="card hero">
       <button class="clef" id="clef" aria-expanded="false" aria-controls="divisi" aria-label="Lihat divisi ekskul"><span>&#119070;</span></button>
       <h2>Informasi Ekstrakurikuler Musik</h2>
@@ -81,61 +61,51 @@
     </div>
   </section>
 
-  <!-- MASUK / PROFIL -->
-  <section id="akun" class="pane">
+  <section id="absensi" class="pane">
 
+    <!-- Belum login: form masuk / buat akun -->
     <div class="card" id="auth-card">
-      <h2>Masuk ke akun ekskul</h2>
-      <form id="login-form" autocomplete="on">
-        <div class="field"><label for="login-user">Username</label>
-          <input class="inp" id="login-user" autocomplete="username" autocapitalize="none" required placeholder="Masukkan username"></div>
-        <div class="field"><label for="login-pass">Password</label>
-          <input class="inp" id="login-pass" type="password" autocomplete="current-password" required placeholder="Masukkan password"></div>
-        <button class="btn primary block" id="btn-login" type="submit">Masuk</button>
-        <div class="note" id="login-msg" role="status"></div>
-      </form>
-      <p class="switch">Belum punya akun? <button type="button" class="link" id="to-akun">Mendaftar</button></p>
+      <div id="login-view">
+        <h2>Masuk untuk absensi</h2>
+        <form id="login-form" autocomplete="on">
+          <div class="field"><label for="login-user">Username</label>
+            <input class="inp" id="login-user" autocomplete="username" autocapitalize="none" required placeholder="Masukkan username"></div>
+          <div class="field"><label for="login-pass">Password</label>
+            <input class="inp" id="login-pass" type="password" autocomplete="current-password" required placeholder="Masukkan password"></div>
+          <button class="btn primary block" id="btn-login" type="submit">Masuk</button>
+          <div class="note" id="login-msg" role="status"></div>
+        </form>
+        <p class="switch">Belum punya akun? <button type="button" class="link" id="to-akun">Mendaftar</button></p>
+      </div>
+
     </div>
 
-    <div id="profil-area" hidden>
-      <div class="card me">
-        <div class="me-head">
-          <label class="avatar big" id="me-avatar" for="me-foto-in" title="Ganti foto profil"></label>
-          <input type="file" id="me-foto-in" accept="image/*" hidden>
-          <div class="me-id">
-            <h2 id="me-nama">-</h2>
-            <p class="muted" id="me-info">-</p>
-            <p class="hint">Ketuk foto untuk menggantinya</p>
-          </div>
+    <!-- Sudah login: form absensi -->
+    <div id="absensi-area" hidden>
+      <div class="card">
+        <div class="who inset">
+          <span>Masuk sebagai <b id="who">-</b></span>
           <button type="button" class="btn" id="btn-logout">Keluar</button>
         </div>
-        <form id="bio-form">
-          <div class="field"><label for="me-bio">Bio</label>
-            <textarea class="inp" id="me-bio" rows="2" maxlength="160" placeholder="Tulis sedikit tentang dirimu dan musikmu"></textarea></div>
-          <button class="btn primary block" id="btn-bio" type="submit">Simpan profil</button>
-          <div class="note" id="bio-msg" role="status"></div>
+        <h2>Formulir Absensi</h2>
+        <form id="absensi-form">
+          <div class="field"><label>Status kehadiran</label>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="status" value="Hadir" checked><span>Hadir</span></label>
+              <label class="chip"><input type="radio" name="status" value="Sakit"><span>Sakit</span></label>
+              <label class="chip"><input type="radio" name="status" value="Izin"><span>Izin</span></label>
+              <label class="chip"><input type="radio" name="status" value="Alpa"><span>Alpa</span></label>
+            </div></div>
+          <button class="btn primary block" id="btn-absen" type="submit">Kirim absensi</button>
+          <div class="note" id="absen-msg" role="status"></div>
         </form>
       </div>
-
       <div class="card">
-        <h2>Bagikan dokumentasi kegiatan</h2>
-        <form id="post-form">
-          <div class="field"><label for="post-foto">Foto kegiatan</label>
-            <label class="drop inset" for="post-foto" id="drop">
-              <img id="post-preview" alt="Pratinjau foto" hidden>
-              <span id="drop-txt">Ketuk untuk memilih foto</span>
-            </label>
-            <input type="file" id="post-foto" accept="image/*" hidden></div>
-          <div class="field"><label for="post-cap">Caption</label>
-            <textarea class="inp" id="post-cap" rows="3" maxlength="300" placeholder="Ceritakan kegiatanmu hari ini…"></textarea></div>
-          <button class="btn primary block" id="btn-post" type="submit">Bagikan ke Kegiatan</button>
-          <div class="note" id="post-msg" role="status"></div>
-        </form>
-      </div>
-
-      <div class="card">
-        <h2>Dokumentasi saya</h2>
-        <div class="scroll inset"><div class="grid" id="me-posts"><p class="muted center">Memuat…</p></div></div>
+        <h2>Absensi hari ini</h2>
+        <div class="scroll inset"><table>
+          <thead><tr><th>Jam</th><th>Nama</th><th>Kelas</th><th>Status</th></tr></thead>
+          <tbody id="absensi-body"><tr><td colspan="4" class="center">Memuat data…</td></tr></tbody>
+        </table></div>
       </div>
     </div>
   </section>
@@ -143,7 +113,7 @@
   <footer class="card footer">
     <div>
       <p>&copy; <span id="year">2026</span> <strong>Ekstrakurikuler Musik SMK BPP Bandung</strong></p>
-      <p class="accent-text">Dibuat oleh S. Mubarok & Faris Al Fathir</p>
+      <p class="accent-text">Dibuat oleh S. Mubarok</p>
     </div>
     <figure class="sign"><img id="sign" alt="Tanda tangan S. Mubarok"><figcaption>S. Mubarok</figcaption></figure>
   </footer>
@@ -167,7 +137,7 @@
         </select></div>
       <div class="field"><label for="reg-divisi">Divisi</label>
         <select class="inp" id="reg-divisi" required><option value="">Pilih divisi</option></select></div>
-      <div class="field"><label for="reg-user">Username (untuk masuk)</label>
+      <div class="field"><label for="reg-user">Username (untuk masuk absensi)</label>
         <input class="inp" id="reg-user" required autocomplete="off" autocapitalize="none" placeholder="4–20 karakter, huruf kecil/angka"></div>
       <div class="field"><label for="reg-pass">Password</label>
         <input class="inp" id="reg-pass" type="password" required minlength="6" autocomplete="new-password" placeholder="Minimal 6 karakter"></div>

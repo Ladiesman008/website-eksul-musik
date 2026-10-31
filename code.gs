@@ -5,6 +5,7 @@
 
 const KODE_VERIFIKASI = ['MUSIK2026'];
 const TZ = 'Asia/Jakarta';
+const SPREADSHEET_AKUN_ID = '18_zhp9mqpjmw7QCgQliiUoZGpxu3TWemde7MJcMtQX0';
 
 // >>> ISI dengan ID folder Google Drive kamu <<<
 // Contoh link: https://drive.google.com/drive/folders/1AbCdEfGh...  -> ID = 1AbCdEfGh...
@@ -67,6 +68,123 @@ function rows_(sh) {
   return data;
 }
 
+<<<<<<< HEAD
+
+// ==========================================
+// DATABASE AKUN
+// ==========================================
+
+function akunSheet_() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_AKUN_ID);
+  let sh = ss.getSheetByName('Akun');
+
+  if (!sh) {
+    sh = ss.insertSheet('Akun');
+  }
+
+  if (sh.getLastRow() === 0) {
+    sh.appendRow(['ID', 'Username', 'Password', 'Role']);
+    sh.getRange(1, 1, 1, 4).setFontWeight('bold');
+    sh.setFrozenRows(1);
+  }
+
+  return sh;
+}
+
+// Membuat hash password dengan salt
+function hashPassword_(password, salt) {
+  const bytes = Utilities.computeDigest(
+    Utilities.DigestAlgorithm.SHA_256,
+    salt + password,
+    Utilities.Charset.UTF_8
+  );
+
+  return bytes.map(b =>
+    ('0' + (b & 255).toString(16)).slice(-2)
+  ).join('');
+}
+
+// Validasi login
+function login_(p) {
+  const username = String(p.username || '').trim().toLowerCase();
+  const password = String(p.password || '');
+
+  if (!username || !password) {
+    return fail_('Username dan password wajib diisi.');
+  }
+
+  try {
+    const sh = akunSheet_();
+    const data = sh.getDataRange().getValues();
+
+    for (let i = 1; i < data.length; i++) {
+      const dbUsername = String(data[i][1]).trim().toLowerCase();
+      const passwordData = String(data[i][2]);
+      const role = String(data[i][3]).trim().toLowerCase();
+
+      if (username !== dbUsername) continue;
+
+      const parts = passwordData.split('$');
+
+      if (parts.length !== 2) break;
+
+      const salt = parts[0];
+      const savedHash = parts[1];
+      const inputHash = hashPassword_(password, salt);
+
+      if (savedHash !== inputHash) break;
+
+      if (!['admin', 'anggota'].includes(role)) break;
+
+      return json_({
+        result: 'success',
+        message: 'Login berhasil.',
+        username: dbUsername,
+        role: role
+      });
+    }
+
+    return fail_('Username atau password salah.');
+
+  } catch (err) {
+    Logger.log(err);
+    return fail_('Terjadi kesalahan saat memproses login.');
+  }
+}
+
+// Setup database akun
+function setupAkun() {
+  akunSheet_();
+  Logger.log('Database akun berhasil disiapkan.');
+}
+
+function buatAdminPertama() {
+  const username = 'admin';
+  const password = 'jamal';
+
+  const sh = akunSheet_();
+
+  if (sh.getLastRow() > 1) {
+    throw new Error('Database sudah memiliki akun.');
+  }
+
+  const salt = Utilities.getUuid().replace(/-/g, '');
+  const hash = hashPassword_(password, salt);
+
+  sh.appendRow([
+    'AKN-001',
+    username,
+    salt + '$' + hash,
+    'admin'
+  ]);
+
+  Logger.log('Akun admin berhasil dibuat.');
+}
+
+// ==========================================
+// POST: PENDAFTARAN ANGGOTA
+// ==========================================
+=======
 // ---------- Sesi ----------
 function login_(username) {
   const token = Utilities.getUuid() + Utilities.getUuid();
@@ -74,6 +192,7 @@ function login_(username) {
   return token;
 }
 const userDari_ = t => t ? CacheService.getScriptCache().get('s_' + t) : null;
+>>>>>>> bdb4a866621731888c7c7a28c05851c46b5c2145
 
 function akun_(token) {
   const u = userDari_(token);
@@ -84,6 +203,19 @@ function akun_(token) {
   return i < 0 ? null : { sh, row: i + 2, r: rs[i], u };
 }
 
+<<<<<<< HEAD
+  // LOGIN
+  if (p.action === 'login') {
+    return login_(p);
+  }
+
+  // Absensi publik ditolak
+
+  // Absensi publik ditolak
+  if (p.action === 'insert_absensi') {
+    return fail_('Akses absensi hanya tersedia untuk admin.');
+  }
+=======
 // ---------- Upload ke Google Drive ----------
 function simpanFoto_(dataUrl, nama) {
   const m = String(dataUrl || '').match(/^data:image\/(jpeg|png|webp);base64,(.+)$/);
@@ -97,6 +229,7 @@ function simpanFoto_(dataUrl, nama) {
 function hapusFile_(id) {
   try { if (id) DriveApp.getFileById(id).setTrashed(true); } catch (e) {}
 }
+>>>>>>> bdb4a866621731888c7c7a28c05851c46b5c2145
 
 // ---------- Feed ----------
 function feed_(token, hanyaUser) {
@@ -275,6 +408,5 @@ function setupAll() {
   DriveApp.getFolderById(FOLDER_ID); // memicu izin Drive
 
   if (sh.getLastRow() < 2) {
-    sh.appendRow([new Date(), 'Faris Al Fathir', 'XI RPL', 'RPL', '-', 'Ketua Ekskul', 'Disetujui']);
-  }
+    sh.appendRow([new Date(), 'Faris Al Fathir', 'XI RPL', 'RPL', '-', 'Ketua Ekskul', 'Disetujui']);  }
 }
