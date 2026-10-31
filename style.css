@@ -91,7 +91,7 @@
   /* tombol suka di reels (putih bercahaya). Mau merah muda lagi? ganti jadi #ff5c8a dan rgba(255,92,138,.7) */
   --like:#fff;--like-glow:rgba(255,255,255,.9);
   /* nada G: ukuran dan geser vertikal (naikkan/turunkan --clef-y jika terlihat kurang tengah) */
-  --clef-size:2.8rem;--clef-y:0px;
+  --clef-size:2rem;--clef-y:0px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 [hidden]{display:none!important}
