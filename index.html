@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ekstrakurikuler Musik - SMK BPP Bandung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Noto+Music&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+  <header class="card header">
+    <div class="brand">
+      <img id="logo" class="logo" alt="Logo Ekskul Musik">
+      <div><h1>Ekstrakurikuler Musik</h1><p class="accent-text">SMK BPP Bandung</p></div>
+    </div>
+    <div class="clock inset"><b id="time">--:--:--</b><span id="date">--</span></div>
+  </header>
+
+  <nav class="card tabs">
+    <button class="btn active" data-tab="dashboard">Dashboard</button>
+    <button class="btn" data-tab="absensi">Absensi</button>
+    <button class="btn primary" id="open-reg">Daftar Anggota</button>
+  </nav>
+
+  <section id="dashboard" class="pane active">
+    <div class="card hero">
+      <button class="clef" id="clef" aria-expanded="false" aria-controls="divisi" aria-label="Lihat divisi ekskul"><span>&#119070;</span></button>
+      <h2>Informasi Ekstrakurikuler Musik</h2>
+      <p class="muted">Ketuk nada G untuk melihat divisi dan materi latihan.</p>
+      <div class="divisi" id="divisi" hidden>
+        <div class="divs" id="divs"></div>
+        <div class="desc inset" id="desc" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <button type="button" class="card stat stat-btn" data-profil="pembina">
+        <span class="muted">Pembina</span>
+        <span class="stat-v">Sahrul Mubarok</span>
+        <span class="hint">Lihat profil</span>
+      </button>
+      <button type="button" class="card stat stat-btn" data-profil="ketua">
+        <span class="muted">Ketua ekskul</span>
+        <span class="stat-v" id="ketua">Faris Al Fathir</span>
+        <span class="hint">Lihat profil</span>
+      </button>
+      <div class="card stat"><p class="muted">Anggota aktif</p><p class="stat-n" id="total">0</p></div>
+    </div>
+
+    <div class="card">
+      <h2>Anggota aktif</h2>
+      <input class="inp" id="search" type="search" placeholder="Cari nama, kelas, atau divisi…" aria-label="Cari anggota">
+      <div class="scroll inset" style="margin-top:1rem"><table>
+        <thead><tr><th>No</th><th>Nama</th><th>Kelas</th><th>Divisi</th><th>Jabatan</th></tr></thead>
+        <tbody id="anggota-body"><tr><td colspan="5" class="center">Memuat data…</td></tr></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section id="absensi" class="pane">
+
+    <!-- Belum login: form masuk / buat akun -->
+    <div class="card" id="auth-card">
+      <div id="login-view">
+        <h2>Masuk untuk absensi</h2>
+        <form id="login-form" autocomplete="on">
+          <div class="field"><label for="login-user">Username</label>
+            <input class="inp" id="login-user" autocomplete="username" autocapitalize="none" required placeholder="Masukkan username"></div>
+          <div class="field"><label for="login-pass">Password</label>
+            <input class="inp" id="login-pass" type="password" autocomplete="current-password" required placeholder="Masukkan password"></div>
+          <button class="btn primary block" id="btn-login" type="submit">Masuk</button>
+          <div class="note" id="login-msg" role="status"></div>
+        </form>
+        <p class="switch">Belum punya akun? <button type="button" class="link" id="to-akun">Mendaftar</button></p>
+      </div>
+
+    </div>
+
+    <!-- Sudah login: form absensi -->
+    <div id="absensi-area" hidden>
+      <div class="card">
+        <div class="who inset">
+          <span>Masuk sebagai <b id="who">-</b></span>
+          <button type="button" class="btn" id="btn-logout">Keluar</button>
+        </div>
+        <h2>Formulir Absensi</h2>
+        <form id="absensi-form">
+          <div class="field"><label>Status kehadiran</label>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="status" value="Hadir" checked><span>Hadir</span></label>
+              <label class="chip"><input type="radio" name="status" value="Sakit"><span>Sakit</span></label>
+              <label class="chip"><input type="radio" name="status" value="Izin"><span>Izin</span></label>
+              <label class="chip"><input type="radio" name="status" value="Alpa"><span>Alpa</span></label>
+            </div></div>
+          <button class="btn primary block" id="btn-absen" type="submit">Kirim absensi</button>
+          <div class="note" id="absen-msg" role="status"></div>
+        </form>
+      </div>
+      <div class="card">
+        <h2>Absensi hari ini</h2>
+        <div class="scroll inset"><table>
+          <thead><tr><th>Jam</th><th>Nama</th><th>Kelas</th><th>Status</th></tr></thead>
+          <tbody id="absensi-body"><tr><td colspan="4" class="center">Memuat data…</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="card footer">
+    <div>
+      <p>&copy; <span id="year">2026</span> <strong>Ekstrakurikuler Musik SMK BPP Bandung</strong></p>
+      <p class="accent-text">Dibuat oleh S. Mubarok</p>
+    </div>
+    <figure class="sign"><img id="sign" alt="Tanda tangan S. Mubarok"><figcaption>S. Mubarok</figcaption></figure>
+  </footer>
+</div>
+
+<!-- Modal daftar anggota -->
+<div class="overlay" id="modal" hidden>
+  <div class="card modal" role="dialog" aria-modal="true" aria-labelledby="reg-title">
+    <div class="modal-head"><h2 id="reg-title">Daftar anggota baru</h2>
+      <button class="close" id="close-reg" aria-label="Tutup">&times;</button></div>
+    <form id="register-form">
+      <div class="field"><label for="reg-nama">Nama lengkap</label>
+        <input class="inp" id="reg-nama" required placeholder="Masukkan nama lengkap"></div>
+      <div class="field"><label for="reg-kelas">Kelas</label>
+        <input class="inp" id="reg-kelas" required placeholder="Contoh: X RPL 2"></div>
+      <div class="field"><label for="reg-jurusan">Jurusan</label>
+        <select class="inp" id="reg-jurusan" required>
+          <option value="">Pilih jurusan</option>
+          <option>Rekayasa Perangkat Lunak</option><option>Busana</option><option>Kuliner</option>
+          <option>Manajemen Perkantoran</option><option>Lainnya</option>
+        </select></div>
+      <div class="field"><label for="reg-divisi">Divisi</label>
+        <select class="inp" id="reg-divisi" required><option value="">Pilih divisi</option></select></div>
+      <div class="field"><label for="reg-user">Username (untuk masuk absensi)</label>
+        <input class="inp" id="reg-user" required autocomplete="off" autocapitalize="none" placeholder="4–20 karakter, huruf kecil/angka"></div>
+      <div class="field"><label for="reg-pass">Password</label>
+        <input class="inp" id="reg-pass" type="password" required minlength="6" autocomplete="new-password" placeholder="Minimal 6 karakter"></div>
+      <div class="field"><label for="reg-kode">Kode verifikasi</label>
+        <input class="inp" id="reg-kode" required autocomplete="off" placeholder="Kode dari pembina"></div>
+      <button class="btn primary block" id="btn-reg" type="submit">Daftar sekarang</button>
+      <div class="note" id="reg-msg" role="status"></div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal profil pembina / ketua -->
+<div class="overlay" id="modal-profil" hidden>
+  <div class="card modal profil" role="dialog" aria-modal="true" aria-labelledby="profil-nama">
+    <div class="modal-head"><h2 id="profil-judul">Profil</h2>
+      <button class="close" id="close-profil" aria-label="Tutup">&times;</button></div>
+    <div class="avatar" id="profil-foto"></div>
+    <h3 id="profil-nama"></h3>
+    <p class="profil-role" id="profil-peran"></p>
+    <p class="muted" id="profil-bio"></p>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
