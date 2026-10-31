@@ -88,6 +88,8 @@
 
   /* cahaya neon putih reels (kecilkan angka alpha jika ingin lebih redup) */
   --neon-1:rgba(255,255,255,.9);--neon-2:rgba(255,255,255,.58);--neon-3:rgba(255,255,255,.3);
+  /* tombol suka di reels (putih bercahaya). Mau merah muda lagi? ganti jadi #ff5c8a dan rgba(255,92,138,.7) */
+  --like:#fff;--like-glow:rgba(255,255,255,.9);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 [hidden]{display:none!important}
@@ -263,41 +265,44 @@ tbody tr{transition:background-color .2s}
 .thumb button{position:absolute;right:6px;top:6px;width:30px;height:30px;border:0;border-radius:50%;cursor:pointer;color:#fff;background:rgba(208,58,58,.85);text-shadow:none;transition:transform .15s}
 .thumb button:active{transform:scale(.9)}
 
-/* ===== REELS: kaca transparan, mengkilap, sedikit melayang ===== */
+/* ===== REELS: gelas kaca bening yang melayang (tanpa warna: hanya putih & abu netral) ===== */
 .reel-stage{display:flex;justify-content:center;align-items:center;gap:1.8rem;margin:1.2rem 0 3.6rem}
 .float-wrap{position:relative;width:min(100%,450px)}
-/* bayangan lantai: mengecil saat kaca naik */
-.float-wrap::after{content:"";position:absolute;left:50%;bottom:-36px;width:68%;height:26px;border-radius:50%;
-  background:radial-gradient(ellipse at center,rgba(60,72,125,.5),rgba(60,72,125,.14) 70%,transparent);
-  filter:blur(14px);transform:translateX(-50%);animation:floor 7s ease-in-out infinite}
+/* bayangan di lantai + bercak cahaya yang ditembus kaca; mengecil saat gelas naik */
+.float-wrap::after{content:"";position:absolute;left:50%;bottom:-38px;width:72%;height:28px;border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(255,255,255,.75) 0,rgba(255,255,255,0) 24%),radial-gradient(ellipse at center,rgba(0,0,0,.3),rgba(0,0,0,.08) 70%,transparent);
+  filter:blur(12px);transform:translateX(-50%);animation:floor 7s ease-in-out infinite}
 .float{position:relative;isolation:isolate;animation:float 7s ease-in-out infinite}
-/* bayangan lembut di belakang kaca agar cahaya putih terlihat menyala */
-.float::before{content:"";position:absolute;inset:-18px;z-index:-1;border-radius:56px;background:rgba(58,72,122,.26);filter:blur(28px)}
-/* lampu neon putih di tepi kaca */
+/* hawa abu netral tipis di belakang gelas agar cahaya putih di tepinya terlihat menyala */
+.float::before{content:"";position:absolute;inset:-16px;z-index:-1;border-radius:54px;background:rgba(0,0,0,.1);filter:blur(26px)}
+/* lampu neon putih di tepi gelas */
 .float::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:38px;
   box-shadow:0 0 3px 1px var(--neon-1),0 0 12px 2px var(--neon-2),0 0 32px 6px var(--neon-3)}
+/* badan gelas: hampir tembus pandang, tepi tebal, dasar lebih tebal */
 .glass{position:relative;height:min(78vh,740px);height:min(78dvh,740px);padding:14px;border-radius:38px;overflow:hidden;
-  background:linear-gradient(135deg,rgba(255,255,255,.34),rgba(255,255,255,.06) 40%,rgba(255,255,255,.02) 64%,rgba(255,255,255,.22));
-  -webkit-backdrop-filter:blur(14px) saturate(160%) brightness(1.03);backdrop-filter:blur(14px) saturate(160%) brightness(1.03);
+  background:linear-gradient(135deg,rgba(255,255,255,.3),rgba(255,255,255,.05) 38%,rgba(255,255,255,.02) 66%,rgba(255,255,255,.2));
+  -webkit-backdrop-filter:blur(8px) brightness(1.03);backdrop-filter:blur(8px) brightness(1.03);
   border:2px solid rgba(255,255,255,.8);
-  box-shadow:0 30px 50px -14px rgba(50,62,120,.3),
-    inset 0 0 14px rgba(255,255,255,.4),inset 0 2px 1px rgba(255,255,255,.9),inset 0 -2px 5px rgba(255,255,255,.45),
-    inset 14px 14px 44px rgba(255,255,255,.18)}
-/* pantulan kaca statis */
+  box-shadow:0 30px 50px -14px rgba(0,0,0,.28),0 0 0 1px rgba(0,0,0,.05),
+    inset 0 0 0 1px rgba(0,0,0,.06),inset 0 2px 1px rgba(255,255,255,.9),inset 0 -10px 16px -10px rgba(255,255,255,.7),
+    inset 0 0 16px rgba(255,255,255,.4),inset 0 0 0 5px rgba(255,255,255,.12)}
+/* pantulan kaca: kilap tegak di sisi kiri, garis tipis di kanan, dan sapuan diagonal */
 .glass::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:inherit;
-  background:linear-gradient(118deg,rgba(255,255,255,.5) 0,rgba(255,255,255,.14) 16%,transparent 32%,transparent 70%,rgba(255,255,255,.22) 100%)}
+  background:linear-gradient(90deg,rgba(255,255,255,.32) 0,rgba(255,255,255,.08) 7%,transparent 14%),
+    linear-gradient(270deg,rgba(255,255,255,.2) 0,transparent 5%),
+    linear-gradient(118deg,rgba(255,255,255,.4) 0,rgba(255,255,255,.1) 16%,transparent 32%,transparent 72%,rgba(255,255,255,.16) 100%)}
 /* kilau yang menyapu pelan */
 .glass::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:inherit;
-  background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.42) 50%,transparent 58%) 0 0/260% 100% no-repeat;animation:sheen 8s ease-in-out infinite}
+  background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.38) 50%,transparent 58%) 0 0/260% 100% no-repeat;animation:sheen 8s ease-in-out infinite}
 .reels{height:100%;overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none;border-radius:22px;overscroll-behavior:contain;
-  box-shadow:0 0 0 1px rgba(255,255,255,.55),0 8px 22px rgba(30,40,90,.32)}
+  box-shadow:0 0 0 1px rgba(255,255,255,.5),0 8px 22px rgba(0,0,0,.3)}
 .reels::-webkit-scrollbar{display:none}
-.reel{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;background:rgba(39,48,79,.55);color:#fff;text-shadow:var(--carve-g)}
+.reel{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;background:rgba(24,24,28,.5);color:#fff;text-shadow:var(--carve-g)}
 .reel button{text-shadow:inherit}
 .reel>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,14,40,.72),rgba(10,14,40,0) 55%)}
-.reel .meta,.reel .side{position:absolute;-webkit-backdrop-filter:blur(14px) saturate(190%);backdrop-filter:blur(14px) saturate(190%);
-  background:linear-gradient(135deg,rgba(255,255,255,.34),rgba(255,255,255,.06) 55%,rgba(255,255,255,.2));
+.shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.62),rgba(0,0,0,0) 55%)}
+.reel .meta,.reel .side{position:absolute;-webkit-backdrop-filter:blur(12px) brightness(1.05);backdrop-filter:blur(12px) brightness(1.05);
+  background:linear-gradient(135deg,rgba(255,255,255,.3),rgba(255,255,255,.06) 55%,rgba(255,255,255,.18));
   border:1px solid rgba(255,255,255,.5);border-top-color:rgba(255,255,255,.85);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -1px 0 rgba(255,255,255,.18),inset 0 0 10px rgba(255,255,255,.18),0 0 12px rgba(255,255,255,.16),0 12px 28px rgba(0,0,0,.34)}
 .reel .meta{left:12px;right:84px;bottom:14px;padding:.8rem 1rem;border-radius:22px;animation:bob 6s ease-in-out infinite}
@@ -308,13 +313,14 @@ tbody tr{transition:background-color .2s}
 .who2 small{color:rgba(255,255,255,.88);font-size:.75rem}
 .cap{font-size:.92rem;max-height:5.6em;overflow:auto;white-space:pre-wrap;word-break:break-word}
 .like{display:flex;flex-direction:column;align-items:center;gap:.1rem;width:52px;padding:.4rem 0;border:0;background:none;color:#fff;font:inherit;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.like span{font-size:1.9rem;line-height:1;transition:transform .2s var(--ease),color .2s}
+.like span{font-size:1.9rem;line-height:1;font-variant-emoji:text;opacity:.6;transition:transform .2s var(--ease),opacity .2s,filter .2s}
 .like:active span{transform:scale(.85)}
-.like.on span{color:#ff5c8a;transform:scale(1.15);filter:drop-shadow(0 0 8px rgba(255,92,138,.7))}
-.burst{position:absolute;left:50%;top:42%;font-size:6rem;color:#ff5c8a;transform:translate(-50%,-50%);pointer-events:none;animation:burst .8s ease-out forwards;filter:drop-shadow(0 6px 18px rgba(0,0,0,.4))}
+.like.on span{opacity:1;transform:scale(1.15);filter:drop-shadow(0 0 7px var(--like-glow))}
+.burst{position:absolute;left:50%;top:42%;font-size:6rem;font-variant-emoji:text;color:var(--like);transform:translate(-50%,-50%);pointer-events:none;animation:burst .8s ease-out forwards;
+  filter:drop-shadow(0 0 16px var(--like-glow)) drop-shadow(0 6px 18px rgba(0,0,0,.35))}
 /* kosong/memuat: tetap kaca bening, bukan blok gelap */
-.reel-empty{height:100%;display:grid;place-items:center;text-align:center;padding:2rem;color:var(--tx-deep);font-weight:700;
-  background:linear-gradient(160deg,rgba(255,255,255,.3),rgba(255,255,255,.05));text-shadow:var(--carve)}
+.reel-empty{height:100%;display:grid;place-items:center;text-align:center;padding:2rem;color:#2f3238;font-weight:700;
+  background:linear-gradient(160deg,rgba(255,255,255,.3),rgba(255,255,255,.05));text-shadow:1px 1px 0 rgba(255,255,255,.9),-1px -1px 1px rgba(0,0,0,.3)}
 .reel-nav{display:flex;flex-direction:column;gap:1rem}
 
 /* ===== Tombol bulat ===== */
@@ -322,8 +328,8 @@ tbody tr{transition:background-color .2s}
   transition:transform .15s var(--ease),box-shadow .15s var(--ease),border-color .15s,color .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 @media(hover:hover){.close:hover{color:#c43030}}
 .close:active{transform:translateY(3px);background:var(--surf-r);border-color:var(--bd-dn);box-shadow:var(--rnd-dn)}
-.reel-nav .close{width:48px;height:48px;color:var(--ac-ink)}
-@media(hover:hover){.reel-nav .close:hover{color:var(--ac2)}}
+.reel-nav .close{width:48px;height:48px;color:var(--tx)}
+@media(hover:hover){.reel-nav .close:hover{color:var(--tx-deep)}}
 
 /* ===== Modal ===== */
 .overlay{position:fixed;inset:0;background:rgba(38,47,73,.5);display:grid;place-items:center;padding:1rem;z-index:50;overflow:auto;overscroll-behavior:contain;animation:fade .2s}
