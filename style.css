@@ -90,6 +90,8 @@
   --neon-1:rgba(255,255,255,.9);--neon-2:rgba(255,255,255,.58);--neon-3:rgba(255,255,255,.3);
   /* tombol suka di reels (putih bercahaya). Mau merah muda lagi? ganti jadi #ff5c8a dan rgba(255,92,138,.7) */
   --like:#fff;--like-glow:rgba(255,255,255,.9);
+  /* nada G: ukuran dan geser vertikal (naikkan/turunkan --clef-y jika terlihat kurang tengah) */
+  --clef-size:2.8rem;--clef-y:0px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 [hidden]{display:none!important}
@@ -197,8 +199,8 @@ tbody tr{transition:background-color .2s}
 .clef{width:112px;height:112px;margin:0 auto 1.4rem;border:0;border-radius:50%;cursor:pointer;display:grid;place-items:center;
   background:radial-gradient(circle at 30% 25%,#fff,#dfe5f1 45%,#b8c3d8);box-shadow:var(--clef-up);
   transition:transform .25s var(--ease),box-shadow .25s var(--ease);-webkit-tap-highlight-color:transparent}
-.clef span{font:4.2rem/1 'Noto Music','Segoe UI Symbol',serif;background:linear-gradient(160deg,var(--gold),#8a5f12);-webkit-background-clip:text;background-clip:text;color:transparent;
-  filter:drop-shadow(2px 4px 2px rgba(120,90,30,.4));text-shadow:none;transition:filter .25s}
+.clef span{display:block;font:var(--clef-size)/1 'Noto Music','Segoe UI Symbol',serif;transform:translateY(var(--clef-y));background:linear-gradient(160deg,var(--gold),#8a5f12);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(1.5px 3px 2px rgba(120,90,30,.4));text-shadow:none;transition:filter .25s}
 @media(hover:hover){.clef:hover{transform:translateY(-5px) rotate(-3deg)}}
 .clef:active,.clef[aria-expanded=true]{transform:translateY(3px) scale(.97);box-shadow:var(--clef-dn);
   background:radial-gradient(circle at 70% 75%,#fff,#dfe5f1 45%,#b8c3d8)}
@@ -230,8 +232,10 @@ tbody tr{transition:background-color .2s}
 /* Footer */
 .footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.2rem;color:var(--mu);margin:0}
 .sign{text-align:center}
-.sign img{display:block;width:120px;height:120px;margin:auto;object-fit:contain}
-.sign figcaption{font-size:.85rem;font-weight:700;color:var(--tx);border-top:1px solid var(--mu);padding-top:.2rem;box-shadow:0 -1px 0 rgba(255,255,255,.8)}
+/* tinta menyatu dengan permukaan (bukan stiker) dan menyilang di atas garis nama */
+.sign img{position:relative;z-index:1;display:block;width:240px;max-width:100%;height:auto;max-height:150px;margin:0 auto -1.1rem;object-fit:contain;
+  mix-blend-mode:multiply;filter:contrast(1.2) brightness(1.04)}
+.sign figcaption{position:relative;font-size:.9rem;font-weight:700;color:var(--tx);border-top:1px solid var(--mu);padding-top:.2rem;box-shadow:0 -1px 0 rgba(255,255,255,.8)}
 
 /* ===== Login & profil ===== */
 .link{background:none;border:0;padding:0;font:inherit;font-weight:700;color:var(--ac-ink);cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-shadow:var(--carve)}
