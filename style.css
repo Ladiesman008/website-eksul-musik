@@ -233,7 +233,7 @@ tbody tr{transition:background-color .2s}
 .footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.2rem;color:var(--mu);margin:0}
 .sign{text-align:center}
 /* tinta menyatu dengan permukaan (bukan stiker) dan menyilang di atas garis nama */
-.sign img{position:relative;z-index:1;display:block;width:240px;max-width:100%;height:auto;max-height:150px;margin:0 auto -1.1rem;object-fit:contain;
+.sign img{position:relative;z-index:1;display:block;width:250px;max-width:100%;height:auto;max-height:150px;margin:0 auto -1.1rem;object-fit:contain;
   mix-blend-mode:multiply;filter:contrast(1.2) brightness(1.04)}
 .sign figcaption{position:relative;font-size:.9rem;font-weight:700;color:var(--tx);border-top:1px solid var(--mu);padding-top:.2rem;box-shadow:0 -1px 0 rgba(255,255,255,.8)}
 
