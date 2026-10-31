@@ -8,7 +8,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 [hidden]{display:none!important}
-body{font-family:'modern No.20','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;min-height:100vh}
+body{font-family:'Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;min-height:100vh}
 h1{font-size:1.7rem;font-weight:800;line-height:1.2}
 h2{font-size:1.25rem;font-weight:800;margin-bottom:1rem}
 .container{max-width:980px;margin:0 auto;padding:1.5rem 1rem 2.5rem}
