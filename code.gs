@@ -15,7 +15,7 @@ const NAMA_FOLDER_UTAMA = 'Database Ekskul Musik SMK BPP Bandung';
 
 // OPSIONAL: isi hanya jika ingin memakai folder Drive yang SUDAH ADA sebagai folder utama
 // (ID dari link folder: drive.google.com/drive/folders/<ID>). Biarkan kosong agar dibuat otomatis.
-const FOLDER_ID = 'https://drive.google.com/drive/u/3/folders/1n3N7KogVlb9q-r_vp3CCbfST8yM9SGz8';
+const FOLDER_ID = '';
 
 // ---------- AKUN ADMIN: JANGAN ditulis di file ini ----------
 // Buka Project Settings (ikon roda gigi) > Script properties > Add script property:
