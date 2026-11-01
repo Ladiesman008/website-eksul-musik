@@ -1,1 +1,1 @@
-const SCRIPT_URL = 'MASUKKAN_URL_WEB_APP_ANDA_DISINI';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwkp0mzT3MWIHYmke31dJeuKcKWngkJcvjrsUIa0rw2UE-dCgDSASqXrSXUuP7xRuUZ/exec';
