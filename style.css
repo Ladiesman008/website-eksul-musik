@@ -217,6 +217,8 @@ td .btn{flex:none;padding:.4rem .8rem;font-size:.82rem;border-radius:12px;margin
 .divs .btn.active{color:var(--ac-ink)}
 .divs .btn i{font-style:normal;font-size:1.6rem;filter:drop-shadow(2px 3px 2px rgba(70,85,120,.3));text-shadow:none;transition:filter .18s}
 .divs .btn:active i,.divs .btn.active i{filter:drop-shadow(1px 1px 1px rgba(70,85,120,.3))}
+/* tombol "Semua Divisi" (sendirian di baris terakhir) dipusatkan di kolom tengah; di layar kecil (1 kolom) tidak berubah */
+@media(min-width:721px){.divs .btn:last-child:nth-child(3n+1){grid-column:2}}
 .desc{padding:1.4rem;text-align:left}
 .desc.fade{animation:rise .3s ease-out}
 .desc h3{margin-bottom:.4rem;font-size:1.2rem}
