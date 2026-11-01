@@ -236,12 +236,9 @@ td .btn{flex:none;padding:.4rem .8rem;font-size:.82rem;border-radius:12px;margin
 .stats+.card{margin-top:2rem}
 
 /* Footer */
-.footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.2rem;color:var(--mu);margin:0}
-.sign{text-align:center}
-/* tinta menyatu dengan permukaan (bukan stiker) dan menyilang di atas garis nama */
-.sign img{position:relative;z-index:1;display:block;width:340px;max-width:100%;height:auto;margin:0 auto -1.5rem;object-fit:contain;
-  mix-blend-mode:multiply;filter:contrast(1.2) brightness(1.04)}
-.sign figcaption{position:relative;font-size:.9rem;font-weight:700;color:var(--tx);border-top:1px solid var(--mu);padding-top:.2rem;box-shadow:0 -1px 0 rgba(255,255,255,.8)}
+.card.footer{padding:.8rem 1.2rem;border-radius:20px;margin:0;text-align:center;font-size:.78rem;line-height:1.55;color:var(--mu);
+  box-shadow:8px 8px 18px var(--lo),-8px -8px 18px var(--hi),0 4px 0 -1px var(--edge),inset 2px 2px 3px rgba(255,255,255,.95),inset -2px -2px 5px rgba(140,155,190,.35)}
+.footer .quote{font-style:italic;margin-bottom:.3rem;text-wrap:balance}
 
 /* ===== Login & profil ===== */
 .link{background:none;border:0;padding:0;font:inherit;font-weight:700;color:var(--ac-ink);cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-shadow:var(--carve)}
@@ -362,7 +359,6 @@ td .btn{flex:none;padding:.4rem .8rem;font-size:.82rem;border-radius:12px;margin
   .clock{width:100%;text-align:center}
   .tabs{flex-wrap:wrap}.tabs .btn{flex:1 1 45%}
   .divs{grid-template-columns:1fr}
-  .footer{flex-direction:column;text-align:center}
   .reel-nav{display:none}
   .glass{height:min(74vh,640px);height:min(74dvh,640px)}
   .me-head{justify-content:center;text-align:center}

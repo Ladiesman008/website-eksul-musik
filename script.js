@@ -11,11 +11,7 @@ const DIVISI = {
     materi: ['Teknik memegang dan menggetarkan angklung', 'Memainkan melodi angklung secara bergiliran', 'Mengenal waditra gamelan dan pola tabuhan dasar', 'Membawakan lagu-lagu daerah'] },
   vokal: { ikon: '🎤', nama: 'Olah Vokal & Paduan Suara',
     deskripsi: 'Melatih suara yang sehat dan merdu, baik untuk solo maupun bernyanyi bersama.',
-    materi: ['Pernapasan diafragma dan pemanasan suara', 'Artikulasi dan ketepatan nada', 'Pembagian suara: sopran, alto, tenor, bass', 'Harmonisasi dan latihan lagu paduan suara'] },
-    semua: {
-      ikon:'🎼', nama: 'Semua Divisi',
-      deskripsi: 'Tertarik pada semua divisi dan ingin mempelajari semua pelajaran tiap divisi.',
-      materi: ['Mempelajari semua bagian dari divisi dengan menyesuaikan jadwal ekstrakulikuler per divisi masing-masing.']}
+    materi: ['Pernapasan diafragma dan pemanasan suara', 'Artikulasi dan ketepatan nada', 'Pembagian suara: sopran, alto, tenor, bass', 'Harmonisasi dan latihan lagu paduan suara'] }
 };
 
 // Profil singkat yang tampil saat tombol Pembina / Ketua ditekan. Edit teksnya sesuai kebutuhan.
@@ -305,19 +301,10 @@ function showProfil(k) {
 document.addEventListener('DOMContentLoaded', () => {
   tick(); setInterval(tick, 1000);
   $('#year').textContent = new Date().getFullYear();
-  fallbackImg($('#logo'), 'logo'); fallbackImg($('#sign'), 'signature');
+  fallbackImg($('#logo'), 'logo');
 
   $('#divs').innerHTML = Object.entries(DIVISI).map(([k, d]) => `<button class="btn" data-k="${k}"><i>${d.ikon}</i>${esc(d.nama)}</button>`).join('');
-  const selectDivisi = $('#reg-divisi');
-
-selectDivisi.innerHTML = '<option value="">Pilih divisi</option>';
-
-Object.values(DIVISI).forEach(d => {
-  const option = document.createElement('option');
-  option.value = d.nama;
-  option.textContent = d.nama;
-  selectDivisi.appendChild(option);
-});
+  $('#reg-divisi').innerHTML += Object.values(DIVISI).map(d => `<option>${esc(d.nama)}</option>`).join('');
   $('#divs').addEventListener('click', e => { const b = e.target.closest('[data-k]'); if (b) showDivisi(b.dataset.k); });
   $('#clef').addEventListener('click', e => {
     const box = $('#divisi'), buka = box.hidden;
