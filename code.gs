@@ -32,7 +32,8 @@ const KUNCI_DETIK = 600;    // lama kunci: 10 menit
 const DIVISI = [
   'Musik Modern',
   'Musik Tradisional (Angklung & Gamelan)',
-  'Olah Vokal & Paduan Suara'
+  'Olah Vokal & Paduan Suara',
+  'Semua divisi'
 ];
 
 // Kolom Anggota: 0 Waktu, 1 Nama, 2 Kelas, 3 Jurusan, 4 Divisi, 5 Jabatan,

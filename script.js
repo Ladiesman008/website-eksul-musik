@@ -11,7 +11,11 @@ const DIVISI = {
     materi: ['Teknik memegang dan menggetarkan angklung', 'Memainkan melodi angklung secara bergiliran', 'Mengenal waditra gamelan dan pola tabuhan dasar', 'Membawakan lagu-lagu daerah'] },
   vokal: { ikon: '🎤', nama: 'Olah Vokal & Paduan Suara',
     deskripsi: 'Melatih suara yang sehat dan merdu, baik untuk solo maupun bernyanyi bersama.',
-    materi: ['Pernapasan diafragma dan pemanasan suara', 'Artikulasi dan ketepatan nada', 'Pembagian suara: sopran, alto, tenor, bass', 'Harmonisasi dan latihan lagu paduan suara'] }
+    materi: ['Pernapasan diafragma dan pemanasan suara', 'Artikulasi dan ketepatan nada', 'Pembagian suara: sopran, alto, tenor, bass', 'Harmonisasi dan latihan lagu paduan suara'] },
+    semua: {
+      ikon:'🎼', nama: 'Semua Divisi',
+      deskripsi: 'Tertarik pada semua divisi dan ingin mempelajari semua pelajaran tiap divisi.',
+      materi: ['Mempelajari semua bagian dari divisi dengan menyesuaikan jadwal ekstrakulikuler per divisi masing-masing.']}
 };
 
 // Profil singkat yang tampil saat tombol Pembina / Ketua ditekan. Edit teksnya sesuai kebutuhan.
