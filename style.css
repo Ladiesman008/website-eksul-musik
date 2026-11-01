@@ -91,7 +91,7 @@
   /* tombol suka di reels (putih bercahaya). Mau merah muda lagi? ganti jadi #ff5c8a dan rgba(255,92,138,.7) */
   --like:#fff;--like-glow:rgba(255,255,255,.9);
   /* nada G: ukuran dan geser vertikal (naikkan/turunkan --clef-y jika terlihat kurang tengah) */
-  --clef-size:2rem;--clef-y:0px;
+  --clef-size:3.6rem;--clef-y:0px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 [hidden]{display:none!important}
@@ -137,7 +137,7 @@ h3{letter-spacing:.02em}
 .brand{display:flex;align-items:center;gap:1.2rem;flex:1 1 360px;min-width:0}
 .brand>div{min-width:0}
 .brand .accent-text{font-size:1.1rem;letter-spacing:.04em;margin-top:.35rem}
-.logo{width:175px;height:175px;object-fit:contain;filter:drop-shadow(6px 10px 8px rgba(70,85,120,.35))}
+.logo{width:175px;height:175px;object-fit:contain;filter:drop-shadow(0 4px 3px rgba(0,0,0,.5)) drop-shadow(0 11px 10px rgba(0,0,0,.32)) drop-shadow(0 -3px 2px rgba(255,255,255,.95)) drop-shadow(0 -6px 7px rgba(255,255,255,.7))}
 .clock{padding:.8rem 1.2rem;text-align:right;display:flex;flex-direction:column}
 .clock b{font-family:var(--display);font-weight:400;font-size:1.7rem;font-variant-numeric:tabular-nums}
 .clock span{font-size:.85rem;color:var(--mu)}
@@ -205,7 +205,7 @@ td .btn{flex:none;padding:.4rem .8rem;font-size:.82rem;border-radius:12px;margin
 .clef{width:112px;height:112px;margin:0 auto 1.4rem;border:0;border-radius:50%;cursor:pointer;display:grid;place-items:center;
   background:radial-gradient(circle at 30% 25%,#fff,#dfe5f1 45%,#b8c3d8);box-shadow:var(--clef-up);
   transition:transform .25s var(--ease),box-shadow .25s var(--ease);-webkit-tap-highlight-color:transparent}
-.clef span{display:block;font:var(--clef-size)/1 'Noto Music','Segoe UI Symbol',serif;transform:translateY(var(--clef-y));background:linear-gradient(160deg,var(--gold),#8a5f12);-webkit-background-clip:text;background-clip:text;color:transparent;
+.clef span{display:block;padding:.6em .4em;margin:-.6em -.4em;font:var(--clef-size)/1 'Noto Music','Segoe UI Symbol',serif;transform:translateY(var(--clef-y));background:linear-gradient(160deg,var(--gold) 20%,#8a5f12 80%);-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(1.5px 3px 2px rgba(120,90,30,.4));text-shadow:none;transition:filter .25s}
 @media(hover:hover){.clef:hover{transform:translateY(-5px) rotate(-3deg)}}
 .clef:active,.clef[aria-expanded=true]{transform:translateY(3px) scale(.97);box-shadow:var(--clef-dn);
@@ -239,7 +239,7 @@ td .btn{flex:none;padding:.4rem .8rem;font-size:.82rem;border-radius:12px;margin
 .footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.2rem;color:var(--mu);margin:0}
 .sign{text-align:center}
 /* tinta menyatu dengan permukaan (bukan stiker) dan menyilang di atas garis nama */
-.sign img{position:relative;z-index:1;display:block;width:250px;max-width:100%;height:auto;max-height:150px;margin:0 auto -1.1rem;object-fit:contain;
+.sign img{position:relative;z-index:1;display:block;width:340px;max-width:100%;height:auto;margin:0 auto -1.5rem;object-fit:contain;
   mix-blend-mode:multiply;filter:contrast(1.2) brightness(1.04)}
 .sign figcaption{position:relative;font-size:.9rem;font-weight:700;color:var(--tx);border-top:1px solid var(--mu);padding-top:.2rem;box-shadow:0 -1px 0 rgba(255,255,255,.8)}
 
