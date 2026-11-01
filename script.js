@@ -308,7 +308,16 @@ document.addEventListener('DOMContentLoaded', () => {
   fallbackImg($('#logo'), 'logo'); fallbackImg($('#sign'), 'signature');
 
   $('#divs').innerHTML = Object.entries(DIVISI).map(([k, d]) => `<button class="btn" data-k="${k}"><i>${d.ikon}</i>${esc(d.nama)}</button>`).join('');
-  $('#reg-divisi').innerHTML += Object.values(DIVISI).map(d => `<option>${esc(d.nama)}</option>`).join('');
+  const selectDivisi = $('#reg-divisi');
+
+selectDivisi.innerHTML = '<option value="">Pilih divisi</option>';
+
+Object.values(DIVISI).forEach(d => {
+  const option = document.createElement('option');
+  option.value = d.nama;
+  option.textContent = d.nama;
+  selectDivisi.appendChild(option);
+});
   $('#divs').addEventListener('click', e => { const b = e.target.closest('[data-k]'); if (b) showDivisi(b.dataset.k); });
   $('#clef').addEventListener('click', e => {
     const box = $('#divisi'), buka = box.hidden;

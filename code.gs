@@ -33,7 +33,7 @@ const DIVISI = [
   'Musik Modern',
   'Musik Tradisional (Angklung & Gamelan)',
   'Olah Vokal & Paduan Suara',
-  'Semua divisi'
+  'Semua Divisi'
 ];
 
 // Kolom Anggota: 0 Waktu, 1 Nama, 2 Kelas, 3 Jurusan, 4 Divisi, 5 Jabatan,
