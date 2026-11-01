@@ -370,3 +370,59 @@ tbody tr{transition:background-color .2s}
   .stats{gap:1.4rem}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* =========================================================
+   TAMBAHAN FITUR: Lencana, Bottom-Sheet Komentar & Notifikasi
+   ========================================================= */
+
+/* Lencana Jabatan */
+.badge-pembina::after { content: ' ⭐'; font-size: 0.9em; }
+.badge-ketua::after { content: ' ✨'; font-size: 0.9em; }
+
+/* Panel Komentar (Bottom-Sheet) */
+#sheet-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); z-index: 999;
+  backdrop-filter: blur(2px);
+}
+#comment-sheet {
+  position: fixed; bottom: -100%; left: 0; right: 0;
+  background: var(--bg); /* Mengikuti warna latar Neumorphism Anda */
+  border-radius: 20px 20px 0 0;
+  padding: 20px; z-index: 1000;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+  transition: bottom 0.3s ease-in-out;
+  max-height: 70vh; display: flex; flex-direction: column;
+}
+#comment-sheet.open { bottom: 0; }
+.sheet-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 15px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px;
+}
+.sheet-header button {
+  background: none; border: none; font-size: 1.5em; cursor: pointer; color: inherit;
+}
+#comment-list {
+  flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px;
+}
+.comment-item { display: flex; gap: 10px; }
+.comment-item .av { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; }
+.comment-item div {
+  background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; flex: 1;
+}
+.comment-item b { display: block; font-size: 0.9em; margin-bottom: 3px; }
+.comment-item span { font-size: 0.7em; opacity: 0.6; display: block; margin-bottom: 5px; }
+.comment-item p { margin: 0; font-size: 0.9em; }
+
+/* Formulir Komentar */
+#comment-form { display: flex; gap: 10px; }
+#comment-input {
+  flex: 1; padding: 10px; border-radius: 20px; border: none;
+  background: rgba(0,0,0,0.05); color: inherit; outline: none;
+}
+#btn-comment {
+  padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer;
+}
+
+/* Validasi Tombol Nonaktif */
+button:disabled { opacity: 0.5; cursor: not-allowed; }

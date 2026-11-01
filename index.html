@@ -213,5 +213,20 @@
 
 <script src="config.js"></script>
 <script src="script.js"></script>
+
+<!-- Komponen Bottom-Sheet Komentar -->
+<div id="sheet-overlay" hidden></div>
+<div id="comment-sheet">
+  <div class="sheet-header">
+    <span>Komentar Kegiatan</span>
+    <button id="close-sheet" type="button" aria-label="Tutup">&times;</button>
+  </div>
+  <div id="comment-list"></div>
+  <form id="comment-form" hidden>
+    <input type="text" id="comment-input" placeholder="Tulis komentar..." required autocomplete="off">
+    <button type="submit" id="btn-comment" class="btn primary">Kirim</button>
+  </form>
+  <div id="comment-msg" class="note center"></div>
+</div>
 </body>
 </html>
