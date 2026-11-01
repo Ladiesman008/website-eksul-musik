@@ -8,7 +8,7 @@ const TZ = 'Asia/Jakarta';
 
 // >>> ISI dengan ID folder Google Drive kamu <<<
 // Contoh link: https://drive.google.com/drive/folders/1AbCdEfGh...  -> ID = 1AbCdEfGh...
-const FOLDER_ID = 'ISI_ID_FOLDER_DRIVE_DI_SINI';
+const FOLDER_ID = 'https://drive.google.com/drive/u/3/folders/1n3N7KogVlb9q-r_vp3CCbfST8yM9SGz8';
 
 const SESI_DETIK = 21600; // login berlaku 6 jam
 
