@@ -304,7 +304,22 @@ document.addEventListener('DOMContentLoaded', () => {
   fallbackImg($('#logo'), 'logo');
 
   $('#divs').innerHTML = Object.entries(DIVISI).map(([k, d]) => `<button class="btn" data-k="${k}"><i>${d.ikon}</i>${esc(d.nama)}</button>`).join('');
-  $('#reg-divisi').innerHTML += Object.values(DIVISI).map(d => `<option>${esc(d.nama)}</option>`).join('');
+  // Tampilkan daftar divisi
+  $('#divs').innerHTML = Object.entries(DIVISI)
+    .map(([k, d]) => `<button class="btn" data-k="${k}"><i>${d.ikon}</i>${esc(d.nama)}</button>`)
+    .join('');
+
+  // Isi dropdown pendaftaran
+  $('#reg-divisi').innerHTML += Object.values(DIVISI)
+    .map(d => `<option value="${esc(d.nama)}">${esc(d.nama)}</option>`)
+    .join('');
+
+  // Tambahkan Semua Divisi jika belum tersedia
+  if (![...$('#reg-divisi').options].some(o => o.value === 'Semua Divisi')) {
+    $('#reg-divisi').add(
+      new Option('Semua Divisi', 'Semua Divisi')
+    );
+  }
   $('#divs').addEventListener('click', e => { const b = e.target.closest('[data-k]'); if (b) showDivisi(b.dataset.k); });
   $('#clef').addEventListener('click', e => {
     const box = $('#divisi'), buka = box.hidden;
